@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    GreetingImage("Android", "Berry")
+                    GreetingImage(stringResource(R.string.android_text), stringResource(R.string.berry))
                 }
             }
         }
@@ -88,7 +89,7 @@ fun Greeting(name: String, from: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingCardPreview() {
     MyApplicationTheme {
-        GreetingImage("Android", "Berry")
+        GreetingImage(stringResource(R.string.android_text), stringResource(R.string.berry))
     }
 }
 
@@ -96,6 +97,6 @@ fun GreetingCardPreview() {
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        Greeting("Android", "Berry")
+        Greeting(stringResource(R.string.android_text), stringResource(R.string.berry))
     }
 }
