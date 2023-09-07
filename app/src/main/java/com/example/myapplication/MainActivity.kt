@@ -6,13 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    GreetingImage("Android")
                 }
             }
         }
@@ -33,12 +36,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingImage(modifier: Modifier = Modifier) {
+fun GreetingImage(message: String, modifier: Modifier = Modifier) {
     val image = painterResource(id = R.drawable.androidparty)
     Box {
         Image(
             painter = image,
-            contentDescription = null
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            alpha = 0.5F
+        )
+        Greeting(
+            name = message,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
         )
     }
 
@@ -48,7 +59,7 @@ fun GreetingImage(modifier: Modifier = Modifier) {
 @Composable
 fun GreetingCardPreview() {
     MyApplicationTheme {
-        GreetingImage()
+        GreetingImage("Android")
     }
 }
 
