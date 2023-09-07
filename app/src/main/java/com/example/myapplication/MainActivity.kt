@@ -84,20 +84,24 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
-    // 컴포저블, 컴포지션 구현
-    var amountInput: MutableState<String> = mutableStateOf("0")
-
+    // 리컴포지션으로 인해 컴포저블 함수가 여러번 호출될 수도 있다. 이런 경우 컴포저블 함수가 매번 재설정되므로 상태를 저장하여야한다.
+    // remember를 사용하여 리컴포지션에서 객체를 저장한다. remember 함수로 계산된 값은 컴포지션에 저장되고, 저장된 값은 리컴포지션에 반환된다.
+    // 일반적으로 remember와 mutableStateOf가 같이 사용됨
+    // by는 코틀린의 속성 위임(delegate) -> remember 클래스의 getter, setter가 위임된다.
+    var amountInput by remember { mutableStateOf("") }
     TextField(
         // 컴포즈는 상태 value 속성을 읽는 각 컴포저블 함수를 추적하고 value가 업데이트되면 재구성하도록 트리거함
         // onValueChange 콜백은 텍스트 상자의 입력이 변경될 때 트리거됨, 람다 표현식의 it 변수에 새 값이 포함된다.
-        value = amountInput.value,
-        onValueChange = { amountInput.value = it },
+        value = amountInput,
+        onValueChange = { amountInput = it },
         modifier = modifier
     )
-    // amountInput이 업데이트되면, onValueChange 함수를 통해 텍스트에 변경사항이 있다고 TextField가 알려준다.
-    // 컴포즈에 의해 amountInput 상태가 추적되므로 값이 변경되는 즉시 리컴포지션이 예약되고 EditNumberField() 컴포저블 함수가 재실행된다.
-    // 이 컴포저블 함수는 amountInput의 변수 초기값이 0으로 설정되어있기 때문에 값이 변경되지만 컴포저블 함수가 초기화되므로 0이 계속 그대로 표시된다.
 
+    // 1. 초기 컴포지션 -> TextField의 value 값은 빈 문자열로 설정됨
+    // 2. 사용자가 텍스트를 입력하면, onValueChange 람다콜백이 호출되고 람다가 실행되며 amountInput.value가 텍스트 입력란에 입력된 수정값으로 설정됨
+    // 3. amountInput은 컴포즈에 의해 추적되는 변경 가능한 상태이며 리컴포지션이 예약된다. 그리고 EditNumberField 컴포저블 함수는 다시 만들어진다.
+    // 4. remember를 사용하므로 변경사항은 다시 만들어진 이후에도 그대로 유지된다.
+    // 5. value는 저장된 amountInput 값으로 설정된다. 텍스트 입력란이 다시 만들어진다.
 }
 
 @Preview
