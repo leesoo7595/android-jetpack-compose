@@ -3,4 +3,7 @@
     <string name="android_text">Android</string>
     <string name="berry">Berry</string>
     <string name="roll">Roll</string>
+    <string name="calculate_tip">Calculate Tip</string>
+    <string name="bill_amount">Bill Amount</string>
+    <string name="tip_amount">Tip Amount: %s</string>
 </resources>
