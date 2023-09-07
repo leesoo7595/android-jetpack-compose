@@ -50,6 +50,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TipTimeLayout() {
+    var amountInput by remember { mutableStateOf("") }
+
+    val amount = amountInput.toDoubleOrNull() ?: 0.0
+    val tip = calculateTip(amount)
     Column(
         modifier = Modifier.padding(40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,11 +65,15 @@ fun TipTimeLayout() {
                 .padding(bottom = 16.dp)
                 .align(alignment = Alignment.Start)
         )
-        EditNumberField(modifier = Modifier
+        EditNumberField(
+            value = amountInput,
+            onValueChange = { amountInput = it },
+            modifier = Modifier
             .padding(bottom = 32.dp)
-            .fillMaxWidth())
+            .fillMaxWidth()
+        )
         Text(
-            text = stringResource(R.string.tip_amount, "$0.00"),
+            text = stringResource(R.string.tip_amount, tip),
             style = MaterialTheme.typography.displaySmall
         )
         Spacer(modifier = Modifier.height(150.dp))
@@ -87,17 +95,12 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNumberField(modifier: Modifier = Modifier) {
-    // 리컴포지션으로 인해 컴포저블 함수가 여러번 호출될 수도 있다. 이런 경우 컴포저블 함수가 매번 재설정되므로 상태를 저장하여야한다.
-    // remember를 사용하여 리컴포지션에서 객체를 저장한다. remember 함수로 계산된 값은 컴포지션에 저장되고, 저장된 값은 리컴포지션에 반환된다.
-    // 일반적으로 remember와 mutableStateOf가 같이 사용됨
-    // by는 코틀린의 속성 위임(delegate) -> remember 클래스의 getter, setter가 위임된다.
-    var amountInput by remember { mutableStateOf("") }
+fun EditNumberField(value: String, onValueChange: (String) -> Unit, modifier: Modifier = Modifier) {
     TextField(
         // 컴포즈는 상태 value 속성을 읽는 각 컴포저블 함수를 추적하고 value가 업데이트되면 재구성하도록 트리거함
         // onValueChange 콜백은 텍스트 상자의 입력이 변경될 때 트리거됨, 람다 표현식의 it 변수에 새 값이 포함된다.
-        value = amountInput,
-        onValueChange = { amountInput = it },
+        value = value,
+        onValueChange = onValueChange,
         label = { Text(stringResource(R.string.bill_amount))},
         singleLine = true,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
