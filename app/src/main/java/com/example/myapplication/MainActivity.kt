@@ -19,6 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,11 +84,20 @@ private fun calculateTip(amount: Double, tipPercent: Double = 15.0): String {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditNumberField(modifier: Modifier = Modifier) {
+    // 컴포저블, 컴포지션 구현
+    var amountInput: MutableState<String> = mutableStateOf("0")
+
     TextField(
-        value = "",
-        onValueChange = {},
+        // 컴포즈는 상태 value 속성을 읽는 각 컴포저블 함수를 추적하고 value가 업데이트되면 재구성하도록 트리거함
+        // onValueChange 콜백은 텍스트 상자의 입력이 변경될 때 트리거됨, 람다 표현식의 it 변수에 새 값이 포함된다.
+        value = amountInput.value,
+        onValueChange = { amountInput.value = it },
         modifier = modifier
     )
+    // amountInput이 업데이트되면, onValueChange 함수를 통해 텍스트에 변경사항이 있다고 TextField가 알려준다.
+    // 컴포즈에 의해 amountInput 상태가 추적되므로 값이 변경되는 즉시 리컴포지션이 예약되고 EditNumberField() 컴포저블 함수가 재실행된다.
+    // 이 컴포저블 함수는 amountInput의 변수 초기값이 0으로 설정되어있기 때문에 값이 변경되지만 컴포저블 함수가 초기화되므로 0이 계속 그대로 표시된다.
+
 }
 
 @Preview
